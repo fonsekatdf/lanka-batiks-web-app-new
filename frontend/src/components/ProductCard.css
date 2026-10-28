@@ -136,3 +136,19 @@
     transform: none;
   }
 }
+
+.product-add-to-cart {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.product-add-to-cart:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.cart-action-message {
+  margin: 8px 0 0;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}

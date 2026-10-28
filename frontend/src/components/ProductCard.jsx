@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
 import "./ProductCard.css";
 import { useState } from "react";
+import useCart from "../hooks/useCart.js";
 
 function ProductCard({ product }) {
+  const { addToCart } = useCart();
+  const [cartMessage, setCartMessage] = useState("");
+  const handleAddToCart = () => {
+    const result = addToCart(product);
+
+    setCartMessage(result.message);
+  };
   const [imageFailed, setImageFailed] = useState(false);
   const imageUrl = product.images?.find(
     (image) => typeof image === "string" && image.trim(),
@@ -53,6 +61,20 @@ function ProductCard({ product }) {
           >
             {product.stock > 0 ? "In stock" : "Sold out"}
           </span>
+          <button
+            type="button"
+            className="button button-primary product-add-to-cart"
+            onClick={handleAddToCart}
+            disabled={!product.stock || product.stock <= 0}
+          >
+            {product.stock > 0 ? "Add to Cart" : "Sold Out"}
+          </button>
+
+          {cartMessage && (
+            <p className="cart-action-message" role="status">
+              {cartMessage}
+            </p>
+          )}
         </div>
       </div>
     </article>
