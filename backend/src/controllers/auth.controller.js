@@ -1,4 +1,4 @@
-import { registerUser } from "../services/auth.services.js";
+import { registerUser, loginUser } from "../services/auth.service.js";
 
 export async function register(req, res, next) {
   const { name, email, password } = req.body ?? {};
@@ -66,4 +66,58 @@ export async function register(req, res, next) {
 
     return next(error);
   }
+}
+
+export async function login(req, res, next) {
+  const { email, password } = req.body ?? {};
+
+  if (
+    typeof email !== "string" ||
+    typeof password !== "string" ||
+    !email.trim() ||
+    !password
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Email and password are required.",
+    });
+  }
+
+  if (
+    email.trim().length > 254 ||
+    Buffer.byteLength(password, "utf8") > 72
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid email or password.",
+    });
+  }
+
+  try {
+    const result = await loginUser({ email, password });
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful.",
+      data: result,
+    });
+  } catch (error) {
+    if (error.statusCode === 401) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password.",
+      });
+    }
+
+    return next(error);
+  }
+}
+
+export function getCurrentUser(req, res) {
+  return res.status(200).json({
+    success: true,
+    data: {
+      user: req.user,
+    },
+  });
 }
