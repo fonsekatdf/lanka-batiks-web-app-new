@@ -4,6 +4,7 @@ import helmet from "helmet";
 
 import healthRoutes from "./routes/health.routes.js";
 import productRoutes from "./routes/product.routes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 import {
     notFoundHandler,
@@ -30,7 +31,7 @@ app.use(express.json());
 // Register API routes.
 app.use("/api/health", healthRoutes);
 app.use("/api/products", productRoutes);
-
+app.use("/api/auth", authRoutes);
 // Keep these handlers after all registered routes.
 app.use(notFoundHandler);
 app.use(errorHandler);
