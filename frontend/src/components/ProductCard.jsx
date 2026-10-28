@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import "./ProductCard.css";
+import { useState } from "react";
 
 function ProductCard({ product }) {
+  const [imageFailed, setImageFailed] = useState(false);
   const imageUrl = product.images?.find(
-    (image) => typeof image === "string" && image.trim()
+    (image) => typeof image === "string" && image.trim(),
   );
 
   return (
@@ -14,21 +16,18 @@ function ProductCard({ product }) {
         aria-label={`View ${product.name}`}
       >
         <div className="product-card-image">
-          {imageUrl ? (
+          {imageUrl && !imageFailed ? (
             <img
               src={imageUrl}
               alt={product.name}
               loading="lazy"
+              onError={() => setImageFailed(true)}
             />
           ) : (
             <div className="product-image-placeholder">
               <span>Lanka Batiks</span>
               <span aria-hidden="true">✳</span>
             </div>
-          )}
-
-          {product.isFeatured && (
-            <span className="product-badge">Featured</span>
           )}
         </div>
       </Link>
@@ -37,9 +36,7 @@ function ProductCard({ product }) {
         <p className="product-category">{product.category}</p>
 
         <h3 className="product-name">
-          <Link to={`/products/${product._id}`}>
-            {product.name}
-          </Link>
+          <Link to={`/products/${product._id}`}>{product.name}</Link>
         </h3>
 
         <div className="product-card-bottom">
