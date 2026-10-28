@@ -11,6 +11,8 @@ import Register from "./pages/Register/Register.jsx";
 import Account from "./pages/Account/Account.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import AdminRoute from "./components/AdminRoute.jsx";
+import AdminProducts from "./pages/Admin/AdminProducts.jsx";
 
 import { CartProvider } from "./context/CartContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -34,6 +36,9 @@ function App() {
               </Route>
 
               <Route path="*" element={<NotFound />} />
+            </Route>
+            <Route element={<AdminRoute />}>
+              <Route path="/admin/products" element={<AdminProducts />} />
             </Route>
           </Routes>
         </BrowserRouter>

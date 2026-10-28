@@ -8,17 +8,18 @@ import {
   deleteProductController,
 } from "../controllers/product.controller.js";
 
+import { authenticateToken } from "../middleware/auth.middleware.js";
+import { requireAdmin } from "../middleware/authorize-admin.middleware.js";
+
 const router = Router();
 
-router
-  .route("/")
-  .post(createProductController)
-  .get(getProductsController);
+// Public routes: customers and guests can browse products.
+router.get("/", getProductsController);
+router.get("/:id", getProductByIdController);
 
-router
-  .route("/:id")
-  .get(getProductByIdController)
-  .put(updateProductController)
-  .delete(deleteProductController);
+// Protected routes: only authenticated administrators can modify products.
+router.post("/", authenticateToken, requireAdmin, createProductController);
+router.put("/:id", authenticateToken, requireAdmin, updateProductController);
+router.delete("/:id", authenticateToken, requireAdmin, deleteProductController);
 
 export default router;

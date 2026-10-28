@@ -25,9 +25,7 @@ function Navbar() {
             Home
           </NavLink>
 
-          <NavLink to="/products">
-            Shop
-          </NavLink>
+          <NavLink to="/products">Shop</NavLink>
 
           <NavLink to="/cart" className="cart-nav-link">
             Cart
@@ -41,6 +39,10 @@ function Navbar() {
 
           {isAuthenticated ? (
             <>
+              {user?.role === "admin" && (
+                <NavLink to="/admin/products">Manage Products</NavLink>
+              )}
+
               <NavLink to="/account">
                 {user?.name ? `Hi, ${user.name}` : "My Account"}
               </NavLink>
