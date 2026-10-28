@@ -1,6 +1,9 @@
 import { Link, NavLink } from "react-router-dom";
+import useCart from "../hooks/useCart.js";
 
 function Navbar() {
+  const { cartCount } = useCart();
+
   return (
     <header className="site-header">
       <div className="container navbar">
@@ -17,8 +20,11 @@ function Navbar() {
             Shop
           </NavLink>
 
-          <NavLink to="/cart">
+          <NavLink to="/cart" className="cart-nav-link">
             Cart
+            <span className="cart-count-badge" aria-label={`${cartCount} items in cart`}>
+              {cartCount}
+            </span>
           </NavLink>
         </nav>
       </div>
