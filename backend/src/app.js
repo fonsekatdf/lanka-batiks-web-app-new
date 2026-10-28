@@ -3,6 +3,12 @@ import cors from "cors";
 import helmet from "helmet";
 
 import healthRoutes from "./routes/health.routes.js";
+import productRoutes from "./routes/product.routes.js";
+
+import {
+    notFoundHandler,
+    errorHandler,
+} from "./middleware/error.middleware.js";
 
 const app = express();
 
@@ -16,10 +22,17 @@ app.use(
   })
 );
 
+app.use(express.json({ limit: "1mb" }));
+
 // Parse incoming JSON request bodies.
 app.use(express.json());
 
 // Register API routes.
 app.use("/api/health", healthRoutes);
+app.use("/api/products", productRoutes);
+
+// Keep these handlers after all registered routes.
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 export default app;
