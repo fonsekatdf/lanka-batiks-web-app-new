@@ -13,6 +13,8 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import AdminRoute from "./components/AdminRoute.jsx";
 import AdminProducts from "./pages/Admin/AdminProducts.jsx";
+import Checkout from "./pages/Checkout/Checkout.jsx";
+import OrderConfirmation from "./pages/OrderConfirmation/OrderConfirmation.jsx";
 
 import { CartProvider } from "./context/CartContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -33,6 +35,11 @@ function App() {
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/account" element={<Account />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route
+                  path="/order-confirmation"
+                  element={<OrderConfirmation />}
+                />
               </Route>
 
               <Route path="*" element={<NotFound />} />
