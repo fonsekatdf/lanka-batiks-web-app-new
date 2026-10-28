@@ -23,7 +23,7 @@ function Cart() {
 
         <div className="cart-empty">
           <div className="cart-empty-icon" aria-hidden="true">
-            ♧
+            LB
           </div>
 
           <h2>Your cart is waiting for something beautiful.</h2>
@@ -103,7 +103,7 @@ function Cart() {
                           updateQuantity(item._id, item.quantity - 1)
                         }
                       >
-                        −
+                        -
                       </button>
 
                       <span aria-live="polite">{item.quantity}</span>
@@ -174,7 +174,7 @@ function Cart() {
             disabled
             title="Checkout will be implemented in a later milestone."
           >
-            Checkout — Coming Soon
+            Checkout - Coming Soon
           </button>
 
           <Link to="/products" className="cart-continue-link">

@@ -7,22 +7,17 @@ import {
 } from "react";
 
 const CartContext = createContext(null);
-
 const STORAGE_KEY = "lanka-batiks-cart";
 
-const readStoredCart = () => {
+function readStoredCart() {
   try {
     const storedCart = localStorage.getItem(STORAGE_KEY);
 
-    if (!storedCart) {
-      return [];
-    }
+    if (!storedCart) return [];
 
     const parsedCart = JSON.parse(storedCart);
 
-    if (!Array.isArray(parsedCart)) {
-      return [];
-    }
+    if (!Array.isArray(parsedCart)) return [];
 
     return parsedCart.filter(
       (item) =>
@@ -34,18 +29,17 @@ const readStoredCart = () => {
         Number.isInteger(item.quantity) &&
         item.quantity > 0 &&
         Number.isInteger(item.stock) &&
-        item.stock >= 0 &&
-        item.quantity <= item.stock
+        item.stock >= item.quantity &&
+        Array.isArray(item.images)
     );
   } catch {
     return [];
   }
-};
+}
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState(readStoredCart);
 
-  // Persist the cart whenever its contents change.
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
@@ -54,133 +48,130 @@ export function CartProvider({ children }) {
     }
   }, [items]);
 
-  // Add a product or increase its existing quantity.
-  const addToCart = useCallback((product, quantity = 1) => {
-    if (
-      !product?._id ||
-      typeof product.name !== "string" ||
-      !Number.isFinite(Number(product.price)) ||
-      Number(product.price) < 0 ||
-      !Number.isInteger(product.stock) ||
-      product.stock <= 0 ||
-      !Number.isInteger(quantity) ||
-      quantity < 1
-    ) {
-      return { success: false, message: "This product cannot be added to the cart." };
-    }
+  const addToCart = useCallback(
+    (product, quantity = 1) => {
+      const price = Number(product?.price);
+      const stock = product?.stock;
 
-    const normalizedProduct = {
-      _id: String(product._id),
-      name: product.name,
-      price: Number(product.price),
-      images: Array.isArray(product.images) ? product.images : [],
-      category: product.category ?? "",
-      stock: product.stock,
-    };
+      if (
+        !product?._id ||
+        typeof product.name !== "string" ||
+        !Number.isFinite(price) ||
+        price < 0 ||
+        !Number.isInteger(stock) ||
+        stock <= 0 ||
+        !Number.isInteger(quantity) ||
+        quantity < 1
+      ) {
+        return {
+          success: false,
+          message: "This product cannot be added to the cart.",
+        };
+      }
 
-    let result = {
-      success: false,
-      message: "Unable to add this product.",
-    };
-
-    setItems((currentItems) => {
-      const existingItem = currentItems.find(
-        (item) => item._id === normalizedProduct._id
-      );
-
+      const productId = String(product._id);
+      const existingItem = items.find((item) => item._id === productId);
       const currentQuantity = existingItem?.quantity ?? 0;
       const nextQuantity = currentQuantity + quantity;
 
-      if (nextQuantity > normalizedProduct.stock) {
-        result = {
+      if (nextQuantity > stock) {
+        return {
           success: false,
-          message: `Only ${normalizedProduct.stock} item(s) are available.`,
+          message: `Only ${stock} item(s) are available.`,
         };
-        return currentItems;
       }
 
-      result = {
-        success: true,
-        message: "Product added to cart.",
+      const normalizedProduct = {
+        _id: productId,
+        name: product.name,
+        price,
+        images: Array.isArray(product.images) ? product.images : [],
+        category: product.category ?? "",
+        stock,
+        quantity: nextQuantity,
       };
 
       if (existingItem) {
-        return currentItems.map((item) =>
-          item._id === normalizedProduct._id
-            ? { ...item, quantity: nextQuantity, ...normalizedProduct }
-            : item
+        setItems((currentItems) =>
+          currentItems.map((item) =>
+            item._id === productId ? normalizedProduct : item
+          )
         );
+      } else {
+        setItems((currentItems) => [
+          ...currentItems,
+          normalizedProduct,
+        ]);
       }
 
-      return [
-        ...currentItems,
-        { ...normalizedProduct, quantity },
-      ];
-    });
+      return {
+        success: true,
+        message: "Product added to cart.",
+      };
+    },
+    [items]
+  );
 
-    return result;
-  }, []);
+  const updateQuantity = useCallback(
+    (productId, quantity) => {
+      if (!Number.isInteger(quantity) || quantity < 1) {
+        return {
+          success: false,
+          message: "Quantity must be a whole number greater than zero.",
+        };
+      }
 
-  // Set an item's quantity, enforcing the available stock limit.
-  const updateQuantity = useCallback((productId, quantity) => {
-    if (!Number.isInteger(quantity)) {
-      return { success: false, message: "Quantity must be a whole number." };
-    }
+      const item = items.find((entry) => entry._id === productId);
 
-    if (quantity <= 0) {
-      return { success: false, message: "Quantity must be at least one." };
-    }
+      if (!item) {
+        return {
+          success: false,
+          message: "Product not found in cart.",
+        };
+      }
 
-    let result = {
-      success: false,
-      message: "Product not found in cart.",
-    };
+      if (quantity > item.stock) {
+        return {
+          success: false,
+          message: `Only ${item.stock} item(s) are available.`,
+        };
+      }
 
-    setItems((currentItems) =>
-      currentItems.map((item) => {
-        if (item._id !== productId) {
-          return item;
-        }
+      setItems((currentItems) =>
+        currentItems.map((entry) =>
+          entry._id === productId
+            ? { ...entry, quantity }
+            : entry
+        )
+      );
 
-        if (quantity > item.stock) {
-          result = {
-            success: false,
-            message: `Only ${item.stock} item(s) are available.`,
-          };
-          return item;
-        }
+      return {
+        success: true,
+        message: "Quantity updated.",
+      };
+    },
+    [items]
+  );
 
-        result = { success: true, message: "Quantity updated." };
-
-        return { ...item, quantity };
-      })
-    );
-
-    return result;
-  }, []);
-
-  // Remove one product from the cart.
   const removeFromCart = useCallback((productId) => {
     setItems((currentItems) =>
       currentItems.filter((item) => item._id !== productId)
     );
   }, []);
 
-  // Empty the entire cart.
   const clearCart = useCallback(() => {
     setItems([]);
   }, []);
 
-  // Calculate totals from the current cart state.
   const cartCount = useMemo(
-    () => items.reduce((total, item) => total + item.quantity, 0),
+    () => items.reduce((sum, item) => sum + item.quantity, 0),
     [items]
   );
 
   const subtotal = useMemo(
     () =>
       items.reduce(
-        (total, item) => total + item.price * item.quantity,
+        (sum, item) => sum + item.price * item.quantity,
         0
       ),
     [items]
