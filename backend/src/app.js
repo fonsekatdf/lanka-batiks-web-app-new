@@ -6,6 +6,7 @@ import healthRoutes from "./routes/health.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import orderRoutes from "./routes/order.routes.js";
+import adminDashboardRoutes from "./routes/admin-dashboard.routes.js";
 
 import {
     notFoundHandler,
@@ -34,6 +35,8 @@ app.use("/api/health", healthRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/admin/dashboard", adminDashboardRoutes);
+
 // Keep these handlers after all registered routes.
 app.use(notFoundHandler);
 app.use(errorHandler);
