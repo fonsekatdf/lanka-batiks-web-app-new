@@ -1,0 +1,305 @@
+.admin-dashboard {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  padding: 40px 28px 64px;
+  color: #29251f;
+}
+
+.admin-dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.admin-dashboard__eyebrow {
+  margin: 0 0 8px;
+  color: #82653d;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.admin-dashboard__header h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+
+.admin-dashboard__header > div:first-child > p:last-child {
+  margin: 10px 0 0;
+  color: #777064;
+}
+
+.admin-dashboard__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.admin-dashboard__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 1px solid #d9d1c4;
+  border-radius: 8px;
+  color: #41382b;
+  background: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.admin-dashboard__button--primary {
+  border-color: #654c2f;
+  background: #654c2f;
+  color: #fff;
+}
+
+.admin-dashboard__button:hover {
+  filter: brightness(0.96);
+}
+
+.admin-dashboard__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+  gap: 18px;
+  margin-bottom: 36px;
+}
+
+.admin-dashboard__stat-card {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #e9e3da;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgb(48 38 24 / 4%);
+}
+
+.admin-dashboard__stat-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #766d61;
+  font-size: 0.88rem;
+}
+
+.admin-dashboard__stat-icon {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: #f3eee6;
+  color: #76552e;
+  font-weight: 700;
+}
+
+.admin-dashboard__stat-value {
+  display: block;
+  margin-top: 22px;
+  overflow-wrap: anywhere;
+  font-size: clamp(1.7rem, 3vw, 2.25rem);
+  line-height: 1.2;
+}
+
+.admin-dashboard__stat-value--currency {
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
+}
+
+.admin-dashboard__stat-card > p {
+  margin: 10px 0 0;
+  color: #8a8176;
+  font-size: 0.82rem;
+}
+
+.admin-dashboard__recent {
+  overflow: hidden;
+  border: 1px solid #e9e3da;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.admin-dashboard__section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 24px;
+  border-bottom: 1px solid #eee8df;
+}
+
+.admin-dashboard__section-heading h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.admin-dashboard__section-heading p {
+  margin: 7px 0 0;
+  color: #80766a;
+  font-size: 0.88rem;
+}
+
+.admin-dashboard__section-heading > a {
+  color: #76552e;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.admin-dashboard__table-wrapper {
+  overflow-x: auto;
+}
+
+.admin-dashboard__table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.admin-dashboard__table th,
+.admin-dashboard__table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0ece6;
+  font-size: 0.86rem;
+}
+
+.admin-dashboard__table th {
+  background: #faf8f5;
+  color: #766d61;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.admin-dashboard__table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin-dashboard__order-id {
+  color: #76552e;
+  font-weight: 700;
+}
+
+.admin-dashboard__customer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.admin-dashboard__customer strong {
+  font-weight: 600;
+}
+
+.admin-dashboard__customer span {
+  color: #80766a;
+  font-size: 0.78rem;
+}
+
+.admin-dashboard__total {
+  font-weight: 700;
+}
+
+.admin-dashboard__status {
+  display: inline-flex;
+  padding: 5px 9px;
+  border-radius: 20px;
+  background: #f0ede8;
+  color: #61584d;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.admin-dashboard__status--pending,
+.admin-dashboard__status--payment-pending {
+  background: #fff2d7;
+  color: #875b08;
+}
+
+.admin-dashboard__status--confirmed,
+.admin-dashboard__status--processing {
+  background: #e6efff;
+  color: #28579a;
+}
+
+.admin-dashboard__status--shipped {
+  background: #eae5ff;
+  color: #6042a1;
+}
+
+.admin-dashboard__status--delivered,
+.admin-dashboard__status--payment-paid {
+  background: #e1f5e8;
+  color: #23683c;
+}
+
+.admin-dashboard__status--cancelled,
+.admin-dashboard__status--payment-failed {
+  background: #fde7e5;
+  color: #a3322b;
+}
+
+.admin-dashboard__status--payment-refunded {
+  background: #f0e8f5;
+  color: #75418b;
+}
+
+.admin-dashboard__message,
+.admin-dashboard__empty {
+  padding: 36px 24px;
+  text-align: center;
+  color: #766d61;
+}
+
+.admin-dashboard__error {
+  padding: 20px;
+  border: 1px solid #e8b7b2;
+  border-radius: 10px;
+  background: #fff4f2;
+  color: #922f28;
+}
+
+.admin-dashboard__error button {
+  padding: 9px 14px;
+  border: 1px solid #c65b53;
+  border-radius: 7px;
+  background: #fff;
+  color: #922f28;
+  cursor: pointer;
+}
+
+.admin-dashboard__empty h3 {
+  margin: 0 0 8px;
+  color: #3d352c;
+}
+
+.admin-dashboard__empty p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .admin-dashboard {
+    padding: 26px 16px 44px;
+  }
+
+  .admin-dashboard__header {
+    align-items: stretch;
+  }
+
+  .admin-dashboard__actions {
+    width: 100%;
+  }
+
+  .admin-dashboard__button {
+    flex: 1;
+  }
+
+  .admin-dashboard__section-heading {
+    padding: 18px;
+  }
+}
