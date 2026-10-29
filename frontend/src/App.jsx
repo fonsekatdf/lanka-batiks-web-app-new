@@ -17,6 +17,7 @@ import Checkout from "./pages/Checkout/Checkout.jsx";
 import OrderConfirmation from "./pages/OrderConfirmation/OrderConfirmation.jsx";
 import MyOrders from "./pages/Orders/MyOrders.jsx";
 import OrderDetails from "./pages/Orders/OrderDetails.jsx";
+import AdminOrders from "./pages/Admin/AdminOrders.jsx";
 
 import { CartProvider } from "./context/CartContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -58,6 +59,10 @@ function App() {
               />
               <Route path="/account/orders" element={<MyOrders />} />
               <Route path="/account/orders/:id" element={<OrderDetails />} />
+            </Route>
+            <Route element={<AdminRoute />}>
+              <Route path="/admin/products" element={<AdminProducts />} />
+              <Route path="/admin/orders" element={<AdminOrders />} />
             </Route>
           </Routes>
         </BrowserRouter>

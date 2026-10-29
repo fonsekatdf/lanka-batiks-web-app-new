@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useState } from "react";
 
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -8,6 +7,8 @@ import {
   getProducts,
   updateProduct,
 } from "../../Services/productService.js";
+
+import { Link } from "react-router-dom";
 
 import "./AdminProducts.css";
 
@@ -229,12 +230,15 @@ function AdminProducts() {
     <section className="admin-products-page">
       <div className="container admin-products-container">
         <header className="admin-products-header">
+          <Link className="button button-secondary" to="/admin/orders">
+            Manage orders
+          </Link>
           <div>
             <p className="admin-eyebrow">Lanka Batiks · Administration</p>
             <h1>Product Management</h1>
             <p>
-              Manage your batik collection, prices, availability, and
-              featured products.
+              Manage your batik collection, prices, availability, and featured
+              products.
             </p>
           </div>
 
@@ -354,7 +358,9 @@ function AdminProducts() {
                   rows={2}
                   placeholder="https://example.com/batik-1.jpg, https://example.com/batik-2.jpg"
                 />
-                <small>Enter up to 10 HTTP/HTTPS URLs, separated by commas.</small>
+                <small>
+                  Enter up to 10 HTTP/HTTPS URLs, separated by commas.
+                </small>
               </label>
 
               <label className="admin-featured-field">
