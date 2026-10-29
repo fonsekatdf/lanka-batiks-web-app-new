@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { getProductById } from "../Services/productService.js";
 import useCart from "../hooks/useCart.js";
 
+import "./ProductDetails.css";
+
 function ProductDetails() {
   const { id } = useParams();
   const { addToCart, formatLKR } = useCart();
@@ -67,37 +69,53 @@ function ProductDetails() {
   }
 
   const isOutOfStock = !product.stock || product.stock <= 0;
+  const imageUrl = product.images?.find(
+    (image) => typeof image === "string" && image.trim(),
+  );
 
   return (
     <section className="container page-section product-details">
-      <p className="eyebrow">{product.category}</p>
+      <div className="product-details-image">
+        {imageUrl ? (
+          <img src={imageUrl} alt={product.name} />
+        ) : (
+          <div className="product-details-image-placeholder">
+            <span>Lanka Batiks</span>
+            <span aria-hidden="true">✳</span>
+          </div>
+        )}
+      </div>
 
-      <h1>{product.name}</h1>
+      <div className="product-details-content">
+        <p className="eyebrow">{product.category}</p>
 
-      <p>{product.description}</p>
+        <h1>{product.name}</h1>
 
-      <p className="product-details-price">
-        {formatLKR(Number(product.price))}
-      </p>
+        <p className="product-details-description">{product.description}</p>
 
-      <p>
-        Available stock: {product.stock}
-      </p>
-
-      <button
-        type="button"
-        className="button button-primary"
-        onClick={handleAddToCart}
-        disabled={isOutOfStock}
-      >
-        {isOutOfStock ? "Sold Out" : "Add to Cart"}
-      </button>
-
-      {cartMessage && (
-        <p role="status" className="cart-action-message">
-          {cartMessage}
+        <p className="product-details-price">
+          {formatLKR(Number(product.price))}
         </p>
-      )}
+
+        <p className="product-details-stock">
+          Available stock: {product.stock}
+        </p>
+
+        <button
+          type="button"
+          className="button button-primary"
+          onClick={handleAddToCart}
+          disabled={isOutOfStock}
+        >
+          {isOutOfStock ? "Sold Out" : "Add to Cart"}
+        </button>
+
+        {cartMessage && (
+          <p role="status" className="cart-action-message">
+            {cartMessage}
+          </p>
+        )}
+      </div>
     </section>
   );
 }
