@@ -40,7 +40,7 @@ function Home() {
 
         if (active) {
           const featured = result.filter((product) => product.isFeatured);
-          setProducts((featured.length > 0 ? featured : result).slice(0, 4));
+          setProducts((featured.length > 0 ? featured : result).slice(0, 8));
         }
       } catch {
         if (active) {

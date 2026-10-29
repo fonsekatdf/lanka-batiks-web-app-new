@@ -154,6 +154,10 @@ function AdminProducts() {
     }
 
     const invalidImage = images.some((image) => {
+      if (image.startsWith("/images/")) {
+        return false;
+      }
+
       try {
         const url = new URL(image);
         return !["http:", "https:"].includes(url.protocol);
@@ -163,7 +167,9 @@ function AdminProducts() {
     });
 
     if (invalidImage) {
-      setError("Each image must be a valid HTTP or HTTPS URL.");
+      setError(
+        "Each image must be a valid HTTP/HTTPS URL or a local path beginning with /images/.",
+      );
       return;
     }
 
@@ -356,10 +362,11 @@ function AdminProducts() {
                   value={formData.images}
                   onChange={handleFieldChange}
                   rows={2}
-                  placeholder="https://example.com/batik-1.jpg, https://example.com/batik-2.jpg"
+                  placeholder="https://example.com/batik-1.jpg, /images/products/batik-2.webp"
                 />
                 <small>
-                  Enter up to 10 HTTP/HTTPS URLs, separated by commas.
+                  Enter up to 10 HTTP/HTTPS URLs or local /images/ paths,
+                  separated by commas.
                 </small>
               </label>
 

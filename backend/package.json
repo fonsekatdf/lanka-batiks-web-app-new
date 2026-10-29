@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "seed:wall-art": "node scripts/seed-wall-art.js",
+    "seed:products": "node scripts/seed-wall-art.js"
   },
   "keywords": [],
   "author": "",
