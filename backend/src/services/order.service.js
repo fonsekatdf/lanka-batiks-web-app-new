@@ -276,3 +276,42 @@ export const createOrder = async (userId, data) => {
     throw error;
   }
 };
+
+
+export const getMyOrders = async (userId) => {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw createError("Invalid customer ID.", 400);
+  }
+
+  const orders = await Order.find({ user: userId })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return orders;
+};
+
+export const getOrderById = async (userId, orderId) => {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw createError("Invalid customer ID.", 400);
+  }
+
+  if (
+    typeof orderId !== "string" ||
+    !mongoose.isValidObjectId(orderId)
+  ) {
+    throw createError("Invalid order ID.", 400);
+  }
+
+  // Include the authenticated customer in the query.
+  // This prevents customers from accessing other customers' orders.
+  const order = await Order.findOne({
+    _id: orderId,
+    user: userId,
+  }).lean();
+
+  if (!order) {
+    throw createError("Order not found.", 404);
+  }
+
+  return order;
+};
