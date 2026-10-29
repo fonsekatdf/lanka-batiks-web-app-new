@@ -232,16 +232,3 @@ Use the URL printed by Vite to preview the production build locally.
 - Keep secrets and database credentials outside the source code.
 - Use HTTPS and appropriate deployment security settings when hosting the application publicly.
 
-## Limitations
-
-Lanka Batiks is developed as an academic project. Its implemented functionality should be evaluated against the actual application and assignment requirements.
-
-The documented order workflow uses cash on delivery. A third-party online payment gateway, advanced notification systems, and additional production infrastructure are not included in this project description.
-
-Further development could include automated tests, additional reporting, online payment integration, and deployment automation if required.
-
----
-
-**Project:** Lanka Batiks — E-Commerce Web Application  
-**Purpose:** University web application development assignment  
-**Repository:** Add the repository URL when preparing the final submission.
