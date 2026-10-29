@@ -55,6 +55,20 @@ function AdminDashboard() {
   }, [loadDashboard]);
 
   const summary = dashboard?.summary;
+  const monthlySales = dashboard?.monthlySales ?? [];
+
+  const maxRevenue = Math.max(
+    1,
+    ...monthlySales.map((month) => month.paidRevenue),
+  );
+
+  const formatMonth = (monthKey) => {
+    const [year, month] = monthKey.split("-").map(Number);
+
+    return new Intl.DateTimeFormat("en", {
+      month: "short",
+    }).format(new Date(Date.UTC(year, month - 1, 15)));
+  };
 
   const statistics = [
     {
@@ -103,7 +117,10 @@ function AdminDashboard() {
           <Link to="/admin/products" className="admin-dashboard__button">
             Manage products
           </Link>
-          <Link to="/admin/orders" className="admin-dashboard__button admin-dashboard__button--primary">
+          <Link
+            to="/admin/orders"
+            className="admin-dashboard__button admin-dashboard__button--primary"
+          >
             Manage orders
           </Link>
         </div>
@@ -126,14 +143,90 @@ function AdminDashboard() {
 
       {!loading && !error && dashboard && (
         <>
-          <section className="admin-dashboard__stats" aria-label="Store statistics">
+          <section
+            className="admin-dashboard__stats"
+            aria-label="Store statistics"
+          >
+            <section
+              className="admin-dashboard__sales"
+              aria-labelledby="monthly-sales-title"
+            >
+              <div className="admin-dashboard__section-heading">
+                <div>
+                  <h2 id="monthly-sales-title">Monthly sales analytics</h2>
+                  <p>Paid revenue and order volume over the last 12 months.</p>
+                </div>
+              </div>
+
+              {monthlySales.length > 0 ? (
+                <>
+                  <div className="admin-dashboard__chart-legend">
+                    <span>
+                      <span className="admin-dashboard__legend-dot" />
+                      Paid revenue (LKR)
+                    </span>
+                    <span>Orders are shown below each month</span>
+                  </div>
+
+                  <div
+                    className="admin-dashboard__chart"
+                    role="img"
+                    aria-label="Monthly paid revenue chart. Monthly order counts are listed beneath each bar."
+                  >
+                    {monthlySales.map((month) => {
+                      const revenue = Number(month.paidRevenue) || 0;
+                      const barHeight = (revenue / maxRevenue) * 100;
+
+                      return (
+                        <div
+                          className="admin-dashboard__chart-column"
+                          key={month.month}
+                          title={`${formatMonth(month.month)}: ${formatLKR(revenue)}, ${month.totalOrders} orders`}
+                        >
+                          <span className="admin-dashboard__chart-value">
+                            {revenue > 0 ? formatLKR(revenue) : "—"}
+                          </span>
+
+                          <div className="admin-dashboard__bar-area">
+                            <div
+                              className="admin-dashboard__bar"
+                              style={{ height: `${barHeight}%` }}
+                            />
+                          </div>
+
+                          <span className="admin-dashboard__chart-month">
+                            {formatMonth(month.month)}
+                          </span>
+
+                          <span className="admin-dashboard__chart-orders">
+                            {month.totalOrders} orders
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <div className="admin-dashboard__empty">
+                  <h3>No monthly sales data</h3>
+                  <p>
+                    Monthly analytics will appear when the API returns sales
+                    data.
+                  </p>
+                </div>
+              )}
+            </section>
+
             {statistics.map((statistic) => (
               <article
                 className="admin-dashboard__stat-card"
                 key={statistic.label}
               >
                 <div className="admin-dashboard__stat-top">
-                  <span className="admin-dashboard__stat-icon" aria-hidden="true">
+                  <span
+                    className="admin-dashboard__stat-icon"
+                    aria-hidden="true"
+                  >
                     {statistic.icon}
                   </span>
                   <span>{statistic.label}</span>
@@ -186,8 +279,12 @@ function AdminDashboard() {
                         </td>
                         <td>
                           <div className="admin-dashboard__customer">
-                            <strong>{order.user?.name || "Unknown customer"}</strong>
-                            <span>{order.user?.email || "No email available"}</span>
+                            <strong>
+                              {order.user?.name || "Unknown customer"}
+                            </strong>
+                            <span>
+                              {order.user?.email || "No email available"}
+                            </span>
                           </div>
                         </td>
                         <td>{formatDate(order.createdAt)}</td>
