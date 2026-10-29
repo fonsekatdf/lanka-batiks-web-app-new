@@ -13,22 +13,11 @@ const validateShippingAddress = (address) => {
     throw createError("A shipping address is required.", 400);
   }
 
-  const requiredFields = [
-    "fullName",
-    "phone",
-    "addressLine1",
-    "city",
-  ];
+  const requiredFields = ["fullName", "phone", "addressLine1", "city"];
 
   for (const field of requiredFields) {
-    if (
-      typeof address[field] !== "string" ||
-      !address[field].trim()
-    ) {
-      throw createError(
-        `Shipping address field '${field}' is required.`,
-        400,
-      );
+    if (typeof address[field] !== "string" || !address[field].trim()) {
+      throw createError(`Shipping address field '${field}' is required.`, 400);
     }
   }
 
@@ -42,9 +31,7 @@ const validateShippingAddress = (address) => {
         : "",
     city: address.city.trim(),
     postalCode:
-      typeof address.postalCode === "string"
-        ? address.postalCode.trim()
-        : "",
+      typeof address.postalCode === "string" ? address.postalCode.trim() : "",
   };
 };
 
@@ -61,21 +48,13 @@ export const createOrder = async (userId, data) => {
     data.paymentMethod !== undefined &&
     data.paymentMethod !== "cash_on_delivery"
   ) {
-    throw createError(
-      "The selected payment method is not supported.",
-      400,
-    );
+    throw createError("The selected payment method is not supported.", 400);
   }
 
-  const shippingAddress = validateShippingAddress(
-    data.shippingAddress,
-  );
+  const shippingAddress = validateShippingAddress(data.shippingAddress);
 
   if (!Array.isArray(data.items) || data.items.length === 0) {
-    throw createError(
-      "Your order must contain at least one product.",
-      400,
-    );
+    throw createError("Your order must contain at least one product.", 400);
   }
 
   if (data.items.length > 50) {
@@ -93,10 +72,7 @@ export const createOrder = async (userId, data) => {
 
     const { productId, quantity } = item;
 
-    if (
-      typeof productId !== "string" ||
-      !/^[a-fA-F0-9]{24}$/.test(productId)
-    ) {
+    if (typeof productId !== "string" || !/^[a-fA-F0-9]{24}$/.test(productId)) {
       throw createError("An order contains an invalid product ID.", 400);
     }
 
@@ -108,10 +84,7 @@ export const createOrder = async (userId, data) => {
     }
 
     if (quantity > 1000) {
-      throw createError(
-        "The requested quantity is too large.",
-        400,
-      );
+      throw createError("The requested quantity is too large.", 400);
     }
 
     return {
@@ -126,10 +99,7 @@ export const createOrder = async (userId, data) => {
   );
 
   if (uniqueIds.size !== requestedItems.length) {
-    throw createError(
-      "Each product must appear only once in the order.",
-      400,
-    );
+    throw createError("Each product must appear only once in the order.", 400);
   }
 
   const products = await Product.find({
@@ -147,17 +117,11 @@ export const createOrder = async (userId, data) => {
     const product = productMap.get(productId);
 
     if (!product) {
-      throw createError(
-        `Product '${productId}' was not found.`,
-        404,
-      );
+      throw createError(`Product '${productId}' was not found.`, 404);
     }
 
     if (!Number.isFinite(product.price) || product.price < 0) {
-      throw createError(
-        `Product '${product.name}' has an invalid price.`,
-        500,
-      );
+      throw createError(`Product '${product.name}' has an invalid price.`, 500);
     }
 
     const unitPriceCents = Math.round(product.price * 100);
@@ -277,7 +241,6 @@ export const createOrder = async (userId, data) => {
   }
 };
 
-
 export const getMyOrders = async (userId) => {
   if (!mongoose.isValidObjectId(userId)) {
     throw createError("Invalid customer ID.", 400);
@@ -295,10 +258,7 @@ export const getOrderById = async (userId, orderId) => {
     throw createError("Invalid customer ID.", 400);
   }
 
-  if (
-    typeof orderId !== "string" ||
-    !mongoose.isValidObjectId(orderId)
-  ) {
+  if (typeof orderId !== "string" || !mongoose.isValidObjectId(orderId)) {
     throw createError("Invalid order ID.", 400);
   }
 
@@ -314,4 +274,91 @@ export const getOrderById = async (userId, orderId) => {
   }
 
   return order;
+};
+
+const ALLOWED_ORDER_TRANSITIONS = {
+  pending: ["confirmed"],
+  confirmed: ["processing"],
+  processing: ["shipped"],
+  shipped: ["delivered"],
+  delivered: [],
+  cancelled: [],
+};
+
+export const getAllOrders = async () => {
+  const orders = await Order.find()
+    .populate("user", "name email")
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return orders;
+};
+
+export const updateOrderStatus = async (orderId, nextStatus) => {
+  if (typeof orderId !== "string" || !mongoose.isValidObjectId(orderId)) {
+    throw createError("Invalid order ID.", 400);
+  }
+
+  const validStatuses = [
+    "pending",
+    "confirmed",
+    "processing",
+    "shipped",
+    "delivered",
+  ];
+
+  if (typeof nextStatus !== "string" || !validStatuses.includes(nextStatus)) {
+    throw createError(
+      "Invalid status. Choose a supported fulfillment status.",
+      400,
+    );
+  }
+
+  const currentOrder = await Order.findById(orderId).lean();
+
+  if (!currentOrder) {
+    throw createError("Order not found.", 404);
+  }
+
+  // Repeating the current status is safe and idempotent.
+  if (currentOrder.status === nextStatus) {
+    return await Order.findById(orderId).populate("user", "name email").lean();
+  }
+
+  const allowedTransitions =
+    ALLOWED_ORDER_TRANSITIONS[currentOrder.status] ?? [];
+
+  if (!allowedTransitions.includes(nextStatus)) {
+    throw createError(
+      `Cannot change order status from '${currentOrder.status}' to '${nextStatus}'.`,
+      409,
+    );
+  }
+
+  // Match the previous status as well, preventing concurrent updates
+  // from silently overwriting a newer status.
+  const updatedOrder = await Order.findOneAndUpdate(
+    {
+      _id: orderId,
+      status: currentOrder.status,
+    },
+    {
+      $set: { status: nextStatus },
+    },
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
+    .populate("user", "name email")
+    .lean();
+
+  if (!updatedOrder) {
+    throw createError(
+      "The order was updated by another request. Refresh and try again.",
+      409,
+    );
+  }
+
+  return updatedOrder;
 };

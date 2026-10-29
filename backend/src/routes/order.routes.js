@@ -4,22 +4,29 @@ import {
   createOrderController,
   getMyOrdersController,
   getOrderByIdController,
+  getAllOrdersController,
+  updateOrderStatusController,
 } from "../controllers/order.controller.js";
 
 import { authenticateToken } from "../middleware/auth.middleware.js";
+import { requireAdmin } from "../middleware/authorize-admin.middleware.js";
 
 const router = Router();
 
-// All order endpoints require authentication.
+// Every order endpoint requires authentication.
 router.use(authenticateToken);
 
-// GET /api/orders - list the authenticated customer's orders.
+// Admin-only routes must appear before the general /:id route.
+router.get("/admin/all", requireAdmin, getAllOrdersController);
+router.patch(
+  "/admin/:id/status",
+  requireAdmin,
+  updateOrderStatusController,
+);
+
+// Customer order endpoints.
 router.get("/", getMyOrdersController);
-
-// GET /api/orders/:id - retrieve one of the customer's orders.
 router.get("/:id", getOrderByIdController);
-
-// POST /api/orders - place an order.
 router.post("/", createOrderController);
 
 export default router;
