@@ -1,0 +1,139 @@
+.order-confirmation {
+  max-width: 850px;
+  margin-inline: auto;
+}
+
+.order-confirmation-card {
+  padding: 36px;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 16px;
+}
+
+.order-confirmation-icon {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 20px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e8f6ed;
+  color: #19733a;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.order-confirmation-eyebrow {
+  margin: 0 0 8px;
+  color: var(--color-primary, #754c24);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.order-confirmation-card h1 {
+  margin: 0 0 10px;
+  font-size: clamp(1.7rem, 4vw, 2.3rem);
+}
+
+.order-confirmation-message {
+  margin-bottom: 24px;
+  color: var(--color-muted, #6b7280);
+}
+
+.order-confirmation-number {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  overflow-wrap: anywhere;
+  background: var(--color-surface-muted, #f8f7f4);
+  border-radius: 10px;
+}
+
+.order-confirmation-number span,
+.order-confirmation-details span {
+  color: var(--color-muted, #6b7280);
+  font-size: 0.9rem;
+}
+
+.order-confirmation-details {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.order-confirmation-details > div {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  overflow-wrap: anywhere;
+}
+
+.order-confirmation-section {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.order-confirmation-section h2 {
+  margin: 0 0 16px;
+  font-size: 1.15rem;
+}
+
+.order-confirmation-items {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order-confirmation-items li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.order-confirmation-items li > div {
+  display: grid;
+  gap: 6px;
+}
+
+.order-confirmation-items li span {
+  color: var(--color-muted, #6b7280);
+  font-size: 0.9rem;
+}
+
+.order-confirmation-items li > strong {
+  flex-shrink: 0;
+}
+
+.order-confirmation-address {
+  display: grid;
+  gap: 7px;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+.order-confirmation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+  .order-confirmation-card {
+    padding: 22px;
+  }
+
+  .order-confirmation-details {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .order-confirmation-items li {
+    align-items: flex-start;
+  }
+}

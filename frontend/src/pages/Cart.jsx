@@ -29,8 +29,8 @@ function Cart() {
           <h2>Your cart is waiting for something beautiful.</h2>
 
           <p>
-            Discover handcrafted batik pieces inspired by the colours
-            and traditions of Sri Lanka.
+            Discover handcrafted batik pieces inspired by the colours and
+            traditions of Sri Lanka.
           </p>
 
           <Link to="/products" className="button button-primary">
@@ -55,8 +55,7 @@ function Cart() {
         <div className="cart-items">
           {items.map((item) => {
             const imageUrl = item.images?.find(
-              (image) =>
-                typeof image === "string" && image.trim().length > 0
+              (image) => typeof image === "string" && image.trim().length > 0,
             );
 
             return (
@@ -77,18 +76,12 @@ function Cart() {
                   <p className="product-category">{item.category}</p>
 
                   <h2>
-                    <Link to={`/products/${item._id}`}>
-                      {item.name}
-                    </Link>
+                    <Link to={`/products/${item._id}`}>{item.name}</Link>
                   </h2>
 
-                  <p className="cart-item-price">
-                    {formatLKR(item.price)}
-                  </p>
+                  <p className="cart-item-price">{formatLKR(item.price)}</p>
 
-                  <p className="cart-item-stock">
-                    {item.stock} available
-                  </p>
+                  <p className="cart-item-stock">{item.stock} available</p>
 
                   <div className="cart-item-actions">
                     <div
@@ -174,7 +167,12 @@ function Cart() {
             disabled
             title="Checkout will be implemented in a later milestone."
           >
-            Checkout - Coming Soon
+            <Link
+              to="/checkout"
+              className="button button-primary cart-checkout-button"
+            >
+              Proceed to checkout
+            </Link>
           </button>
 
           <Link to="/products" className="cart-continue-link">

@@ -57,7 +57,9 @@ function Account() {
       <section className="page-section">
         <div className="container account-card">
           <h1>Account unavailable</h1>
-          <p className="account-message" role="alert">{error}</p>
+          <p className="account-message" role="alert">
+            {error}
+          </p>
           <Link className="button button-primary" to="/login">
             Sign in
           </Link>
@@ -71,9 +73,7 @@ function Account() {
       <div className="container account-card">
         <p className="eyebrow">Your Lanka Batiks account</p>
         <h1>My Account</h1>
-        <p className="account-intro">
-          Welcome back, {user?.name}.
-        </p>
+        <p className="account-intro">Welcome back, {user?.name}.</p>
 
         <div className="account-details">
           <div className="account-detail">
@@ -95,6 +95,9 @@ function Account() {
         <p className="account-note">
           Your profile is retrieved from the authenticated backend endpoint.
         </p>
+        <Link className="button button-secondary" to="/account/orders">
+          My Orders
+        </Link>
 
         <button
           type="button"

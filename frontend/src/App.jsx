@@ -13,6 +13,10 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import AdminRoute from "./components/AdminRoute.jsx";
 import AdminProducts from "./pages/Admin/AdminProducts.jsx";
+import Checkout from "./pages/Checkout/Checkout.jsx";
+import OrderConfirmation from "./pages/OrderConfirmation/OrderConfirmation.jsx";
+import MyOrders from "./pages/Orders/MyOrders.jsx";
+import OrderDetails from "./pages/Orders/OrderDetails.jsx";
 
 import { CartProvider } from "./context/CartContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -33,12 +37,27 @@ function App() {
 
               <Route element={<ProtectedRoute />}>
                 <Route path="/account" element={<Account />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route
+                  path="/order-confirmation"
+                  element={<OrderConfirmation />}
+                />
               </Route>
 
               <Route path="*" element={<NotFound />} />
             </Route>
             <Route element={<AdminRoute />}>
               <Route path="/admin/products" element={<AdminProducts />} />
+            </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/account" element={<Account />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route
+                path="/order-confirmation"
+                element={<OrderConfirmation />}
+              />
+              <Route path="/account/orders" element={<MyOrders />} />
+              <Route path="/account/orders/:id" element={<OrderDetails />} />
             </Route>
           </Routes>
         </BrowserRouter>
