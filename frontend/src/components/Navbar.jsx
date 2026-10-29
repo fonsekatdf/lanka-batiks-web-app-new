@@ -44,7 +44,10 @@ function Navbar() {
           {isAuthenticated ? (
             <>
               {user?.role === "admin" && (
-                <NavLink to="/admin/products">Manage Products</NavLink>
+                <>
+                  <NavLink to="/admin">Admin Dashboard</NavLink>
+                  <NavLink to="/admin/products">Manage Products</NavLink>
+                </>
               )}
 
               <NavLink to="/account">
