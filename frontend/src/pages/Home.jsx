@@ -10,6 +10,26 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [activeHeaderImage, setActiveHeaderImage] = useState(0);
+
+  const headerImages = [
+    "/images/header_img_1.png",
+    "/images/header_img_2.png",
+    "/images/header_img_3.png",
+    "/images/header_img_4.png",
+  ];
+
+  useEffect(() => {
+    const rotation = window.setInterval(() => {
+      setActiveHeaderImage((currentImage) =>
+        (currentImage + 1) % headerImages.length,
+      );
+    }, 4000);
+
+    return () => {
+      window.clearInterval(rotation);
+    };
+  }, [headerImages.length]);
 
   useEffect(() => {
     let active = true;
@@ -43,6 +63,14 @@ function Home() {
   return (
     <>
       <section className="home-hero">
+        <img
+          src={headerImages[activeHeaderImage]}
+          alt=""
+          className="home-hero-image"
+          aria-hidden="true"
+        />
+        <div className="home-hero-overlay" aria-hidden="true" />
+
         <div className="container home-hero-inner">
           <div className="home-hero-copy">
             <p className="eyebrow">Crafted in Sri Lanka</p>
@@ -71,25 +99,6 @@ function Home() {
             <p className="home-hero-note">
               Artful patterns. Island heritage. Everyday beauty.
             </p>
-          </div>
-
-          <div
-            className="home-hero-art"
-            role="img"
-            aria-label="Decorative batik-inspired pattern"
-          >
-            <div className="hero-art-frame">
-              <div className="hero-art-inner">
-                <span className="hero-art-star">✳</span>
-                <span className="hero-art-title">LANKA</span>
-                <span className="hero-art-subtitle">BATIKS</span>
-                <span className="hero-art-star">✳</span>
-              </div>
-            </div>
-
-            <span className="hero-art-caption">
-              Inspired by the island
-            </span>
           </div>
         </div>
       </section>

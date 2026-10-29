@@ -16,8 +16,12 @@ function Navbar() {
   return (
     <header className="site-header">
       <div className="container navbar">
-        <Link to="/" className="brand">
-          Lanka <span>Batiks</span>
+        <Link to="/" className="brand" aria-label="Lanka Batiks home">
+          <img
+            src="/images/lanka-batiks-logo.png"
+            alt="Lanka Batiks"
+            className="brand-logo"
+          />
         </Link>
 
         <nav className="nav-links" aria-label="Main navigation">

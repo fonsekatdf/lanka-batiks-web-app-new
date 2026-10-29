@@ -161,19 +161,15 @@ function Cart() {
             Shipping and any applicable fees are not included.
           </p>
 
-          <button
-            type="button"
+          <Link
+            to="/checkout"
             className="button button-primary cart-checkout-button"
-            disabled
-            title="Checkout will be implemented in a later milestone."
           >
-            <Link
-              to="/checkout"
-              className="button button-primary cart-checkout-button"
-            >
-              Proceed to checkout
-            </Link>
-          </button>
+            <span>Proceed to checkout</span>
+            <span className="checkout-button-arrow" aria-hidden="true">
+              →
+            </span>
+          </Link>
 
           <Link to="/products" className="cart-continue-link">
             Continue shopping

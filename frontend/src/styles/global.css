@@ -1,18 +1,18 @@
 :root {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  color: #29251f;
-  background: #faf7f0;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+  /* Lanka Batiks - White & Purple Theme */
+  --color-primary: hsl(279, 55%, 45%);
+  --color-primary-dark: #ad2cd8;
+  --color-muted: #6B6475;
+  --color-border: #E7DDFB;
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #F5F0FF;
 
-  --color-primary: #a64b32;
-  --color-primary-dark: #803723;
-  --color-text: #29251f;
-  --color-muted: #746d63;
-  --color-border: #e8dfd2;
-  --color-surface: #fffdf8;
+  /* Additional theme colours */
+  --color-background: #FFFFFF;
+  --color-heading: #24123F;
+  --color-purple-light: #F5F0FF;
+  --color-purple-border: #E7DDFB;
+  --color-text: #302442;
 }
 
 * {
@@ -72,13 +72,19 @@ img {
 }
 
 .brand {
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  line-height: 0;
 }
 
-.brand span {
-  color: var(--color-primary);
+.brand-logo {
+  display: block;
+  width: 190px;
+  height: 64px;
+  object-fit: contain;
+  object-position: left center;
 }
 
 .nav-links {
@@ -88,13 +94,18 @@ img {
 }
 
 .nav-links a {
-  color: var(--color-muted);
+  color: #3e3150;
+  font-weight: 600;
   transition: color 160ms ease;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
   color: var(--color-primary);
+}
+
+.nav-links a:hover {
+  color: var(--color-primary-dark);
 }
 
 .main-content {
