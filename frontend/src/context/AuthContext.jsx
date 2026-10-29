@@ -3,17 +3,56 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useEffect,
   useState,
 } from "react";
 
 import authService from "../services/authService.js";
 
 const AuthContext = createContext(null);
+const AUTH_STORAGE_KEY = "lanka-batiks-auth";
+
+function getStoredAuth() {
+  const storedAuth = localStorage.getItem(AUTH_STORAGE_KEY);
+
+  if (!storedAuth) {
+    return { token: null, user: null };
+  }
+
+  try {
+    const parsedAuth = JSON.parse(storedAuth);
+
+    if (typeof parsedAuth.token !== "string" || !parsedAuth.user) {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+      return { token: null, user: null };
+    }
+
+    return {
+      token: parsedAuth.token,
+      user: parsedAuth.user,
+    };
+  } catch {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    return { token: null, user: null };
+  }
+}
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null);
+  const [initialAuth] = useState(getStoredAuth);
+  const [token, setToken] = useState(initialAuth.token);
+  const [user, setUser] = useState(initialAuth.user);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (token && user) {
+      localStorage.setItem(
+        AUTH_STORAGE_KEY,
+        JSON.stringify({ token, user }),
+      );
+    } else {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    }
+  }, [token, user]);
 
   const login = useCallback(async ({ email, password }) => {
     setLoading(true);
@@ -27,6 +66,13 @@ export function AuthProvider({ children }) {
 
       setToken(result.data.token);
       setUser(result.data.user);
+      localStorage.setItem(
+        AUTH_STORAGE_KEY,
+        JSON.stringify({
+          token: result.data.token,
+          user: result.data.user,
+        }),
+      );
 
       return result.data.user;
     } finally {
